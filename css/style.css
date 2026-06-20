@@ -1777,3 +1777,97 @@ h3,
     width: fit-content;
   }
 }
+
+
+
+
+
+
+
+
+/* ================================
+   AUTH / LOGIN
+================================ */
+
+.auth-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background:
+    radial-gradient(circle at top left, rgba(247, 121, 137, 0.22), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(207, 232, 181, 0.42), transparent 32%),
+    linear-gradient(135deg, #fff1df 0%, #fffaf3 45%, #fff4e4 100%);
+}
+
+.auth-card {
+  width: min(460px, 100%);
+  background: rgba(255, 253, 247, 0.9);
+  border: 1.5px solid var(--border);
+  border-radius: 26px;
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  text-align: center;
+}
+
+.auth-badge {
+  width: fit-content;
+  margin: 0 auto 1rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: var(--pink-light);
+  font-weight: 900;
+}
+
+.auth-card h1 {
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.auth-card p {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.auth-form {
+  margin-top: 1.4rem;
+  text-align: left;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.auth-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.auth-actions button {
+  flex: 1;
+}
+
+.auth-message {
+  min-height: 1.3rem;
+  margin: 0.5rem 0 0;
+  text-align: center;
+  font-weight: 750;
+}
+
+.auth-message.success {
+  color: #3d7b2f;
+}
+
+.auth-message.error {
+  color: var(--pink);
+}
+
+.user-pill {
+  min-width: 210px;
+}
+
+.d-none {
+  display: none !important;
+}

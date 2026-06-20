@@ -21,7 +21,65 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <div class="app-shell">
+
+
+
+
+<!-- AUTH / LOGIN -->
+<section class="auth-screen" id="authSection">
+  <div class="auth-card">
+    <div class="auth-badge">🏁 Buff with Buddies</div>
+
+    <h1>Log ind</h1>
+    <p>
+      Opret en bruger eller log ind for at gemme jeres challenge-data online.
+    </p>
+
+    <div class="auth-form">
+      <label for="authDisplayName" class="form-label">Navn</label>
+      <input
+        type="text"
+        id="authDisplayName"
+        class="form-control"
+        placeholder="Fx Lily"
+      />
+
+      <label for="authEmail" class="form-label">Email</label>
+      <input
+        type="email"
+        id="authEmail"
+        class="form-control"
+        placeholder="din@email.dk"
+      />
+
+      <label for="authPassword" class="form-label">Password</label>
+      <input
+        type="password"
+        id="authPassword"
+        class="form-control"
+        placeholder="Mindst 6 tegn"
+      />
+
+      <div class="auth-actions">
+        <button id="signInBtn" class="primary-button" type="button">
+          Log ind
+        </button>
+
+        <button id="signUpBtn" class="secondary-button" type="button">
+          Opret bruger
+        </button>
+      </div>
+
+      <p id="authMessage" class="auth-message"></p>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+  <div class="app-shell d-none" id="appShell">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
@@ -105,6 +163,29 @@
             <i class="bi bi-pencil"></i>
             <span>Rediger deltagere</span>
           </button>
+
+
+
+
+
+          <article class="stat-pill user-pill">
+  <i class="bi bi-person-circle"></i>
+  <div>
+    <strong id="currentUserName">Ikke logget ind</strong>
+    <span id="currentUserEmail">—</span>
+  </div>
+</article>
+
+<button id="signOutBtn" class="secondary-button" type="button">
+  <i class="bi bi-box-arrow-right"></i>
+  Log ud
+</button>
+
+
+
+
+
+
 
           <button class="cta-button" type="button" data-section-target="dailyLogSection">
             <i class="bi bi-plus-lg"></i>
