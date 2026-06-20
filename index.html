@@ -236,7 +236,7 @@
                     </div>
 
                     <div class="mini-race-row">
-                      <span class="mini-race-name bror">Bror</span>
+                      <span class="mini-race-name bror">Maki</span>
                       <div class="mini-race-cells">
                         <span class="filled base"></span>
                         <span class="filled base"></span>
@@ -245,7 +245,7 @@
                     </div>
 
                     <div class="mini-race-row">
-                      <span class="mini-race-name faetter">Fætter</span>
+                      <span class="mini-race-name faetter">Miki</span>
                       <div class="mini-race-cells">
                         <span class="filled base"></span>
                         <span class="filled bonus"></span>
@@ -344,10 +344,42 @@
         </div>
       </section>
 
+
+<!-- LOGBOG -->
+<section class="content-section" id="logSection">
+  <div class="section-header simple-header">
+    <div class="section-number">03</div>
+    <div>
+      <h2>Logbog</h2>
+      <p>Se alt det, der er blevet registreret dag for dag</p>
+    </div>
+  </div>
+
+  <div class="dashboard-card">
+    <div class="log-toolbar">
+      <div>
+        <label class="form-label">Filtrér efter deltager</label>
+        <select id="logParticipantFilter" class="form-select">
+          <option value="all">Alle deltagere</option>
+        </select>
+      </div>
+
+      <button id="clearLogFilterBtn" class="secondary-button" type="button">
+        Vis alle
+      </button>
+    </div>
+
+    <div id="dailyLogList" class="daily-log-list">
+      <!-- JS indsætter log entries her -->
+    </div>
+  </div>
+</section>
+
+
       <!-- RACE TRACK -->
       <section class="content-section" id="raceTrackSection">
         <div class="section-header simple-header">
-          <div class="section-number">03</div>
+          <div class="section-number">04</div>
           <div>
             <h2>Race track</h2>
             <p>Her kan I se, hvem der fører lige nu</p>
@@ -367,7 +399,7 @@
       <!-- CHECK-IN -->
       <section class="content-section" id="checkInSection">
         <div class="section-header simple-header">
-          <div class="section-number">04</div>
+          <div class="section-number">05</div>
           <div>
             <h2>Ugentlig check-in</h2>
             <p>Log vægt, taljemål og bonus for vægttab</p>
@@ -416,7 +448,7 @@
       <!-- STATS -->
       <section class="content-section" id="statsSection">
         <div class="section-header simple-header">
-          <div class="section-number">05</div>
+          <div class="section-number">06</div>
           <div>
             <h2>Statistik</h2>
             <p>Et lille overblik over challenge-status</p>
@@ -444,7 +476,7 @@
       <!-- MOTIVATION -->
       <section class="content-section" id="motivationSection">
         <div class="section-header simple-header">
-          <div class="section-number">06</div>
+          <div class="section-number">07</div>
           <div>
             <h2>Motivation</h2>
             <p>Små reminders til de dage, hvor man hellere ville være en burrito</p>
@@ -462,7 +494,7 @@
       <!-- SETTINGS -->
       <section class="content-section" id="settingsSection">
         <div class="section-header simple-header">
-          <div class="section-number">07</div>
+          <div class="section-number">08</div>
           <div>
             <h2>Indstillinger</h2>
             <p>Administrér challenge-data</p>
@@ -517,6 +549,10 @@
       </div>
     </div>
   </div>
+
+ <!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/app.js"></script>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
