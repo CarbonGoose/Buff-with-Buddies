@@ -1,3 +1,8 @@
+/* ================================
+   TRANSFORMATION CHALLENGE JS
+   LocalStorage + Carousel + Dashboard
+================================ */
+
 // ---------- LOCAL STORAGE ----------
 
 const STORAGE_KEY = "transformationChallengeData";
@@ -10,28 +15,79 @@ let appData = {
   endDate: ""
 };
 
-// ---------- DOM ----------
+// ---------- POINT SYSTEM ----------
 
-const navItems = document.querySelectorAll(".nav-item");
-const views = document.querySelectorAll(".view");
+const dailyRequirements = ["training", "steps", "healthyFood"];
+
+const bonusPoints = {
+  vegetables: 1,
+  earlySleepWake: 1,
+  eightHoursSleep: 1,
+  stretching: 1,
+  classTraining: 1,
+  selfCare: 1,
+  water: 1,
+  newActivity: 2,
+  personalRecord: 1,
+  healthyMeal: 1,
+  outside: 1
+};
+
+// ---------- DOM ELEMENTS ----------
+
+const participantForm = document.querySelector("#participantForm");
+const participantNameInput = document.querySelector("#participantName");
+const participantList = document.querySelector("#participantList");
+
+const activeParticipantSelect = document.querySelector("#activeParticipant");
+const weeklyParticipantSelect = document.querySelector("#weeklyParticipant");
+
+const entryDateInput = document.querySelector("#entryDate");
+const saveEntryBtn = document.querySelector("#saveEntryBtn");
+
+const saveWeeklyBtn = document.querySelector("#saveWeeklyBtn");
+const weightInput = document.querySelector("#weightInput");
+const waistInput = document.querySelector("#waistInput");
+const weightLostInput = document.querySelector("#weightLostInput");
+const weeklyNotes = document.querySelector("#weeklyNotes");
+
+const raceTrack = document.querySelector("#raceTrack");
 
 const participantCount = document.querySelector("#participantCount");
+const statsParticipantCount = document.querySelector("#statsParticipantCount");
+const leaderName = document.querySelector("#leaderName");
+const leaderPoints = document.querySelector("#leaderPoints");
 
-const ruleSlides = document.querySelectorAll(".rule-slide");
-const prevRuleBtn = document.querySelector("#prevRule");
-const nextRuleBtn = document.querySelector("#nextRule");
-const carouselDots = document.querySelector("#carouselDots");
+const startDateInput = document.querySelector("#startDate");
+const endDateInput = document.querySelector("#endDate");
+const resetAllDataBtn = document.querySelector("#resetAllDataBtn");
 
-let currentRuleSlide = 0;
+// Carousel elements
+const slides = document.querySelectorAll(".rule-slide");
+const dots = document.querySelectorAll(".dot");
+const prevSlideBtn = document.querySelector("#prevSlideBtn");
+const nextSlideBtn = document.querySelector("#nextSlideBtn");
+const resetTourBtn = document.querySelector("#resetTourBtn");
+const startChallengeBtn = document.querySelector("#startChallengeBtn");
+const currentSlideNumber = document.querySelector("#currentSlideNumber");
+const totalSlideNumber = document.querySelector("#totalSlideNumber");
+
+let currentSlide = 0;
 
 // ---------- INIT ----------
 
 document.addEventListener("DOMContentLoaded", () => {
   loadData();
-  updateParticipantCount();
+  setTodayAsDefaultDate();
+  renderAll();
 
+  setupParticipantForm();
+  setupDailyLog();
+  setupWeeklyCheckIn();
+  setupChallengeDates();
   setupNavigation();
   setupCarousel();
+  setupResetButton();
 });
 
 // ---------- DATA ----------
@@ -48,112 +104,552 @@ function saveData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
 }
 
-// ---------- NAVIGATION ----------
+function setTodayAsDefaultDate() {
+  const today = new Date().toISOString().split("T")[0];
 
-function setupNavigation() {
-  navItems.forEach((item) => {
-    item.addEventListener("click", () => {
-      const targetView = item.dataset.view;
+  if (entryDateInput) {
+    entryDateInput.value = today;
+  }
 
-      navItems.forEach((nav) => nav.classList.remove("active"));
-      item.classList.add("active");
+  if (startDateInput) {
+    startDateInput.value = appData.startDate || "";
+  }
 
-      views.forEach((view) => {
-        view.classList.remove("active");
-      });
+  if (endDateInput) {
+    endDateInput.value = appData.endDate || "";
+  }
+}
 
-      const activeView = document.querySelector(`#${targetView}`);
-      if (activeView) {
-        activeView.classList.add("active");
-      }
-    });
+// ---------- SETUP ----------
+
+function setupParticipantForm() {
+  if (!participantForm) return;
+
+  participantForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const name = participantNameInput.value.trim();
+
+    if (!name) return;
+
+    const alreadyExists = appData.participants.some(
+      (participant) => participant.toLowerCase() === name.toLowerCase()
+    );
+
+    if (alreadyExists) {
+      alert("Den deltager findes allerede 👀");
+      return;
+    }
+
+    appData.participants.push(name);
+    participantNameInput.value = "";
+
+    saveData();
+    renderAll();
   });
 }
 
-// ---------- PARTICIPANT COUNT ----------
+function setupDailyLog() {
+  if (!saveEntryBtn) return;
 
-function updateParticipantCount() {
-  if (!participantCount) return;
+  saveEntryBtn.addEventListener("click", handleSaveEntry);
+}
 
-  participantCount.textContent = `${appData.participants.length} deltagere`;
+function setupWeeklyCheckIn() {
+  if (!saveWeeklyBtn) return;
+
+  saveWeeklyBtn.addEventListener("click", handleSaveWeeklyCheckIn);
+}
+
+function setupChallengeDates() {
+  if (!startDateInput || !endDateInput) return;
+
+  startDateInput.addEventListener("change", () => {
+    appData.startDate = startDateInput.value;
+    saveData();
+  });
+
+  endDateInput.addEventListener("change", () => {
+    appData.endDate = endDateInput.value;
+    saveData();
+  });
+}
+
+function setupResetButton() {
+  if (!resetAllDataBtn) return;
+
+  resetAllDataBtn.addEventListener("click", () => {
+    const confirmed = confirm(
+      "Er du sikker på, at du vil nulstille al data? Det kan ikke fortrydes 😭"
+    );
+
+    if (!confirmed) return;
+
+    localStorage.removeItem(STORAGE_KEY);
+
+    appData = {
+      participants: ["Lily", "Bror", "Fætter"],
+      entries: {},
+      weeklyCheckIns: [],
+      startDate: "",
+      endDate: ""
+    };
+
+    setTodayAsDefaultDate();
+    renderAll();
+
+    alert("Alt er nulstillet ✨");
+  });
+}
+
+// ---------- NAVIGATION ----------
+
+function setupNavigation() {
+  const navigationButtons = document.querySelectorAll("[data-section-target]");
+
+  navigationButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const targetId = button.dataset.sectionTarget;
+      const targetSection = document.querySelector(`#${targetId}`);
+
+      if (!targetSection) return;
+
+      targetSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+      updateActiveNavButton(targetId);
+    });
+  });
+
+  window.addEventListener("scroll", updateNavOnScroll);
+}
+
+function updateActiveNavButton(targetId) {
+  const navButtons = document.querySelectorAll(".nav-item");
+
+  navButtons.forEach((button) => {
+    button.classList.toggle(
+      "is-active",
+      button.dataset.sectionTarget === targetId
+    );
+  });
+}
+
+function updateNavOnScroll() {
+  const sections = document.querySelectorAll(".content-section");
+  let currentSectionId = "";
+
+  sections.forEach((section) => {
+    const rect = section.getBoundingClientRect();
+
+    if (rect.top <= 160 && rect.bottom >= 160) {
+      currentSectionId = section.id;
+    }
+  });
+
+  if (currentSectionId) {
+    updateActiveNavButton(currentSectionId);
+  }
 }
 
 // ---------- CAROUSEL ----------
 
 function setupCarousel() {
-  if (!ruleSlides.length) return;
+  if (!slides.length) return;
 
-  createCarouselDots();
-  showRuleSlide(currentRuleSlide);
+  totalSlideNumber.textContent = slides.length;
 
-  prevRuleBtn?.addEventListener("click", () => {
-    changeRuleSlide(-1);
+  prevSlideBtn.addEventListener("click", showPreviousSlide);
+  nextSlideBtn.addEventListener("click", showNextSlide);
+
+  resetTourBtn.addEventListener("click", () => {
+    showSlide(0);
   });
 
-  nextRuleBtn?.addEventListener("click", () => {
-    changeRuleSlide(1);
-  });
+  startChallengeBtn.addEventListener("click", () => {
+    const dailyLogSection = document.querySelector("#dailyLogSection");
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowLeft") {
-      changeRuleSlide(-1);
+    if (dailyLogSection) {
+      dailyLogSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+      updateActiveNavButton("dailyLogSection");
     }
-
-    if (event.key === "ArrowRight") {
-      changeRuleSlide(1);
-    }
   });
-}
 
-function createCarouselDots() {
-  carouselDots.innerHTML = "";
-
-  ruleSlides.forEach((_, index) => {
-    const dot = document.createElement("button");
-    dot.classList.add("carousel-dot");
-    dot.setAttribute("aria-label", `Gå til regel ${index + 1}`);
-
+  dots.forEach((dot) => {
     dot.addEventListener("click", () => {
-      currentRuleSlide = index;
-      showRuleSlide(currentRuleSlide);
+      const slideIndex = Number(dot.dataset.slide);
+      showSlide(slideIndex);
     });
-
-    carouselDots.appendChild(dot);
-  });
-}
-
-function changeRuleSlide(direction) {
-  currentRuleSlide += direction;
-
-  if (currentRuleSlide < 0) {
-    currentRuleSlide = ruleSlides.length - 1;
-  }
-
-  if (currentRuleSlide >= ruleSlides.length) {
-    currentRuleSlide = 0;
-  }
-
-  showRuleSlide(currentRuleSlide);
-}
-
-function showRuleSlide(index) {
-  ruleSlides.forEach((slide, slideIndex) => {
-    slide.classList.toggle("active", slideIndex === index);
   });
 
-  const dots = document.querySelectorAll(".carousel-dot");
+  showSlide(currentSlide);
+}
+
+function showSlide(index) {
+  if (index < 0) {
+    currentSlide = slides.length - 1;
+  } else if (index >= slides.length) {
+    currentSlide = 0;
+  } else {
+    currentSlide = index;
+  }
+
+  slides.forEach((slide, slideIndex) => {
+    slide.classList.toggle("is-active", slideIndex === currentSlide);
+  });
 
   dots.forEach((dot, dotIndex) => {
-    dot.classList.toggle("active", dotIndex === index);
+    dot.classList.toggle("is-active", dotIndex === currentSlide);
   });
 
-  updateCarouselCounter();
+  currentSlideNumber.textContent = currentSlide + 1;
 }
 
-function updateCarouselCounter() {
-  const counter = document.querySelector("#carouselCounter");
+function showPreviousSlide() {
+  showSlide(currentSlide - 1);
+}
 
-  if (!counter) return;
+function showNextSlide() {
+  showSlide(currentSlide + 1);
+}
 
-  counter.textContent = `${currentRuleSlide + 1} / ${ruleSlides.length}`;
+// ---------- RENDER ----------
+
+function renderAll() {
+  renderParticipants();
+  renderParticipantSelects();
+  renderParticipantCounts();
+  renderRaceTrack();
+  renderStats();
+}
+
+function renderParticipants() {
+  if (!participantList) return;
+
+  participantList.innerHTML = "";
+
+  appData.participants.forEach((participant, index) => {
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      <span>${index + 1}. ${participant}</span>
+      <button class="remove-btn" data-name="${participant}" type="button" title="Fjern deltager">
+        ✕
+      </button>
+    `;
+
+    participantList.appendChild(li);
+  });
+
+  const removeButtons = document.querySelectorAll(".remove-btn");
+
+  removeButtons.forEach((button) => {
+    button.addEventListener("click", handleRemoveParticipant);
+  });
+}
+
+function renderParticipantSelects() {
+  if (!activeParticipantSelect || !weeklyParticipantSelect) return;
+
+  activeParticipantSelect.innerHTML = "";
+  weeklyParticipantSelect.innerHTML = "";
+
+  appData.participants.forEach((participant) => {
+    const dailyOption = document.createElement("option");
+    dailyOption.value = participant;
+    dailyOption.textContent = participant;
+
+    const weeklyOption = document.createElement("option");
+    weeklyOption.value = participant;
+    weeklyOption.textContent = participant;
+
+    activeParticipantSelect.appendChild(dailyOption);
+    weeklyParticipantSelect.appendChild(weeklyOption);
+  });
+}
+
+function renderParticipantCounts() {
+  const count = appData.participants.length;
+
+  if (participantCount) {
+    participantCount.textContent = `${count} deltagere`;
+  }
+
+  if (statsParticipantCount) {
+    statsParticipantCount.textContent = count;
+  }
+}
+
+function renderStats() {
+  if (!leaderName || !leaderPoints) return;
+
+  if (appData.participants.length === 0) {
+    leaderName.textContent = "—";
+    leaderPoints.textContent = "0 felter";
+    return;
+  }
+
+  const sortedParticipants = [...appData.participants].sort((a, b) => {
+    return getParticipantTotalPoints(b) - getParticipantTotalPoints(a);
+  });
+
+  const leader = sortedParticipants[0];
+  const points = getParticipantTotalPoints(leader);
+
+  leaderName.textContent = leader;
+  leaderPoints.textContent = `${points} felter`;
+}
+
+// ---------- PARTICIPANTS ----------
+
+function handleRemoveParticipant(event) {
+  const name = event.currentTarget.dataset.name;
+
+  const confirmed = confirm(`Vil du fjerne ${name}?`);
+
+  if (!confirmed) return;
+
+  appData.participants = appData.participants.filter(
+    (participant) => participant !== name
+  );
+
+  delete appData.entries[name];
+
+  appData.weeklyCheckIns = appData.weeklyCheckIns.filter(
+    (checkIn) => checkIn.participant !== name
+  );
+
+  saveData();
+  renderAll();
+}
+
+// ---------- DAILY ENTRY ----------
+
+function handleSaveEntry() {
+  const participant = activeParticipantSelect.value;
+  const date = entryDateInput.value;
+
+  if (!participant || !date) {
+    alert("Vælg både deltager og dato først 🫶");
+    return;
+  }
+
+  const checkedValues = getCheckedDailyValues();
+
+  const baseComplete = dailyRequirements.every((requirement) =>
+    checkedValues.includes(requirement)
+  );
+
+  const basePoints = baseComplete ? 1 : 0;
+  const bonusTotal = calculateBonusPoints(checkedValues);
+  const totalPoints = basePoints + bonusTotal;
+
+  if (totalPoints === 0) {
+    alert("Ingen felter optjent endnu — men hey, no shame. Prøv igen 🫶");
+    return;
+  }
+
+  if (!appData.entries[participant]) {
+    appData.entries[participant] = {};
+  }
+
+  const alreadyLogged = appData.entries[participant][date];
+
+  if (alreadyLogged) {
+    const overwrite = confirm(
+      `${participant} har allerede logget denne dato. Vil du overskrive dagen?`
+    );
+
+    if (!overwrite) return;
+  }
+
+  appData.entries[participant][date] = {
+    date,
+    checkedValues,
+    baseComplete,
+    basePoints,
+    bonusPoints: bonusTotal,
+    totalPoints
+  };
+
+  saveData();
+  renderAll();
+  clearDailyCheckboxes();
+
+  alert(`${participant} fik ${totalPoints} felt(er) i dag 🏁`);
+}
+
+function getCheckedDailyValues() {
+  const checkedInputs = document.querySelectorAll(
+    "#dailyLogSection input[type='checkbox']:checked"
+  );
+
+  return Array.from(checkedInputs).map((input) => input.value);
+}
+
+function calculateBonusPoints(checkedValues) {
+  return checkedValues.reduce((total, value) => {
+    return total + (bonusPoints[value] || 0);
+  }, 0);
+}
+
+function clearDailyCheckboxes() {
+  const checkedInputs = document.querySelectorAll(
+    "#dailyLogSection input[type='checkbox']:checked"
+  );
+
+  checkedInputs.forEach((input) => {
+    input.checked = false;
+  });
+}
+
+// ---------- WEEKLY CHECK-IN ----------
+
+function handleSaveWeeklyCheckIn() {
+  const participant = weeklyParticipantSelect.value;
+
+  if (!participant) {
+    alert("Vælg deltager først 🫶");
+    return;
+  }
+
+  const weight = Number(weightInput.value) || null;
+  const waist = Number(waistInput.value) || null;
+  const weightLost = Number(weightLostInput.value) || 0;
+  const notes = weeklyNotes.value.trim();
+
+  const today = new Date().toISOString().split("T")[0];
+  const weightLossBonus = Math.floor(weightLost);
+
+  appData.weeklyCheckIns.push({
+    participant,
+    date: today,
+    weight,
+    waist,
+    weightLost,
+    notes,
+    bonusPoints: weightLossBonus
+  });
+
+  if (weightLossBonus > 0) {
+    addWeightLossBonus(participant, today, weightLossBonus);
+  }
+
+  saveData();
+  renderAll();
+  clearWeeklyInputs();
+
+  alert(`Check-in gemt for ${participant} ✨`);
+}
+
+function addWeightLossBonus(participant, date, points) {
+  if (!appData.entries[participant]) {
+    appData.entries[participant] = {};
+  }
+
+  const bonusKey = `${date}-weight-loss-${Date.now()}`;
+
+  appData.entries[participant][bonusKey] = {
+    date,
+    checkedValues: ["weightLoss"],
+    baseComplete: false,
+    basePoints: 0,
+    bonusPoints: points,
+    totalPoints: points
+  };
+}
+
+function clearWeeklyInputs() {
+  weightInput.value = "";
+  waistInput.value = "";
+  weightLostInput.value = "";
+  weeklyNotes.value = "";
+}
+
+// ---------- RACE TRACK ----------
+
+function renderRaceTrack() {
+  if (!raceTrack) return;
+
+  raceTrack.innerHTML = "";
+
+  if (appData.participants.length === 0) {
+    raceTrack.innerHTML = `<p>Tilføj en deltager for at starte racet 🏁</p>`;
+    return;
+  }
+
+  const sortedParticipants = [...appData.participants].sort((a, b) => {
+    return getParticipantTotalPoints(b) - getParticipantTotalPoints(a);
+  });
+
+  const highestScore = Math.max(
+    30,
+    ...sortedParticipants.map((participant) => getParticipantTotalPoints(participant))
+  );
+
+  sortedParticipants.forEach((participant) => {
+    const fieldTypes = getParticipantFieldTypes(participant);
+    const totalPoints = fieldTypes.length;
+
+    const row = document.createElement("div");
+    row.classList.add("race-row");
+    row.style.gridTemplateColumns = `130px repeat(${highestScore}, 28px)`;
+
+    const name = document.createElement("div");
+    name.classList.add("race-name");
+    name.textContent = `${participant} (${totalPoints})`;
+
+    row.appendChild(name);
+
+    for (let i = 0; i < highestScore; i++) {
+      const cell = document.createElement("div");
+      cell.classList.add("race-cell");
+
+      if (fieldTypes[i] === "base") {
+        cell.classList.add("base-filled");
+      }
+
+      if (fieldTypes[i] === "bonus") {
+        cell.classList.add("bonus-filled");
+      }
+
+      row.appendChild(cell);
+    }
+
+    raceTrack.appendChild(row);
+  });
+}
+
+function getParticipantFieldTypes(participant) {
+  const participantEntries = appData.entries[participant];
+
+  if (!participantEntries) return [];
+
+  const sortedEntries = Object.values(participantEntries).sort((a, b) => {
+    return new Date(a.date) - new Date(b.date);
+  });
+
+  const fieldTypes = [];
+
+  sortedEntries.forEach((entry) => {
+    for (let i = 0; i < entry.basePoints; i++) {
+      fieldTypes.push("base");
+    }
+
+    for (let i = 0; i < entry.bonusPoints; i++) {
+      fieldTypes.push("bonus");
+    }
+  });
+
+  return fieldTypes;
+}
+
+function getParticipantTotalPoints(participant) {
+  return getParticipantFieldTypes(participant).length;
 }

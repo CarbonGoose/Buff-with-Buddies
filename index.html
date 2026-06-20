@@ -11,113 +11,517 @@
     rel="stylesheet"
   />
 
+  <!-- Bootstrap Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  />
+
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css" />
 </head>
-
 <body>
   <div class="app-shell">
 
+    <!-- SIDEBAR -->
     <aside class="sidebar">
-      <div class="logo">🏆</div>
+      <div class="sidebar-brand">
+        <div class="brand-icon">🏆</div>
+      </div>
 
-      <nav>
-        <button class="nav-item active" data-view="overview">🏠 Overblik</button>
-        <button class="nav-item" data-view="daily">📋 Dagens log</button>
-        <button class="nav-item" data-view="race">📈 Race track</button>
-        <button class="nav-item" data-view="checkin">⚖️ Check-in</button>
-        <button class="nav-item" data-view="stats">🏆 Statistik</button>
-        <button class="nav-item" data-view="settings">⚙️ Indstillinger</button>
+      <nav class="sidebar-nav">
+        <button class="nav-item is-active" data-section-target="overviewSection">
+          <i class="bi bi-house-door"></i>
+          <span>Overblik</span>
+        </button>
+
+        <button class="nav-item" data-section-target="dailyLogSection">
+          <i class="bi bi-journal-check"></i>
+          <span>Dagens log</span>
+        </button>
+
+        <button class="nav-item" data-section-target="raceTrackSection">
+          <i class="bi bi-graph-up-arrow"></i>
+          <span>Race track</span>
+        </button>
+
+        <button class="nav-item" data-section-target="checkInSection">
+          <i class="bi bi-speedometer2"></i>
+          <span>Check-in</span>
+        </button>
+
+        <button class="nav-item" data-section-target="statsSection">
+          <i class="bi bi-trophy"></i>
+          <span>Statistik</span>
+        </button>
+
+        <button class="nav-item" data-section-target="motivationSection">
+          <i class="bi bi-heart"></i>
+          <span>Motivation</span>
+        </button>
+
+        <button class="nav-item" data-section-target="settingsSection">
+          <i class="bi bi-gear"></i>
+          <span>Indstillinger</span>
+        </button>
       </nav>
+
+      <div class="sidebar-decor">✖</div>
     </aside>
 
-    <div class="main-area">
+    <!-- MAIN -->
+    <div class="main-content">
 
+      <!-- TOP BAR -->
       <header class="topbar">
-        <div>
-          <h1>1-Måneds<br>Transformation Challenge</h1>
-          <p class="subtitle">♡ Race Edition ♡</p>
+        <div class="topbar-title-wrap">
+          <h1>1-Måneds<br />Transformation Challenge</h1>
+          <p class="race-badge">♡ Race Edition ♡</p>
         </div>
 
-        <div class="top-actions">
-          <div class="stat-card">📅 <strong>30 dage</strong><span>1 mål</span></div>
-          <div class="stat-card">👥 <strong id="participantCount">3 deltagere</strong><span>Holdet</span></div>
-          <button class="stat-card">✏️ Rediger deltagere</button>
-          <button class="add-data-btn">＋ Tilføj data</button>
+        <div class="topbar-actions">
+          <article class="stat-pill">
+            <i class="bi bi-calendar3"></i>
+            <div>
+              <strong>30 Dage</strong>
+              <span>1 mål</span>
+            </div>
+          </article>
+
+          <article class="stat-pill">
+            <i class="bi bi-people"></i>
+            <div>
+              <strong id="participantCount">3 deltagere</strong>
+              <span>Holdet</span>
+            </div>
+          </article>
+
+          <button
+            class="stat-pill button-pill"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#participantsModal"
+          >
+            <i class="bi bi-pencil"></i>
+            <span>Rediger deltagere</span>
+          </button>
+
+          <button class="cta-button" type="button" data-section-target="dailyLogSection">
+            <i class="bi bi-plus-lg"></i>
+            Tilføj data
+          </button>
         </div>
       </header>
 
-      <main class="content">
+      <!-- OVERVIEW -->
+      <section class="content-section" id="overviewSection">
+        <div class="section-header">
+          <div class="section-number">01</div>
+          <div>
+            <h2>Formål & Regler 🎯</h2>
+            <p>Swipe eller brug pilene for at se alle reglerne</p>
+          </div>
 
-        <section class="view active" id="overview">
-          <div class="section-title">
-            <span class="section-number">01</span>
-            <div>
-              <h2>Formål & Regler 🎯</h2>
-              <p>Swipe eller brug pilene for at se alle reglerne</p>
+          <div class="sticky-note top-note">
+            Consistency<br />
+            beats<br />
+            motivation! ♡
+          </div>
+        </div>
+
+        <div class="rules-carousel-card">
+          <button class="carousel-arrow left" id="prevSlideBtn" type="button" aria-label="Forrige slide">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+
+          <div class="rules-carousel-track" id="rulesCarouselTrack">
+
+            <!-- SLIDE 1 -->
+            <article class="rule-slide is-active">
+              <div class="slide-grid">
+                <div class="rule-panel soft-panel panel-pink">
+                  <h3>Daglige krav ✨</h3>
+                  <p>Fuldfør alle 3 krav for at få 1 felt frem på banen.</p>
+
+                  <ul class="rule-list with-boxes">
+                    <li><span>✅</span> Trænet (20–30 min)</li>
+                    <li><span>👟</span> Gået dagens skridtmål</li>
+                    <li><span>🥗</span> Spist overordnet sundt</li>
+                  </ul>
+
+                  <div class="mini-note-card green-note">
+                    Opfyldes alle 3 krav = <strong>1 felt frem</strong>
+                  </div>
+                </div>
+
+                <div class="rule-panel soft-panel panel-yellow">
+                  <h3>Bonus felter ⭐</h3>
+                  <p>Få ekstra felter ved at gøre en ekstra indsats!</p>
+
+                  <ul class="rule-list points-list">
+                    <li><span>🥦</span> Spist grøntsager <strong>+1</strong></li>
+                    <li><span>🌙</span> Tidligt i seng / tidligt op <strong>+1</strong></li>
+                    <li><span>😴</span> 8 timers søvn <strong>+1</strong></li>
+                    <li><span>🤸</span> Udstrækning / smidighed <strong>+1</strong></li>
+                    <li><span>🏋️</span> Holdtræning <strong>+1</strong></li>
+                    <li><span>🧴</span> Selvpleje <strong>+1</strong></li>
+                    <li><span>💧</span> Drik 2+ liter vand <strong>+1</strong></li>
+                    <li><span>🆕</span> Ny sport / aktivitet <strong>+2</strong></li>
+                    <li><span>🔥</span> Personlig rekord <strong>+1</strong></li>
+                    <li><span>🍳</span> Lavet sundt måltid <strong>+1</strong></li>
+                    <li><span>🌳</span> 30 min udendørs <strong>+1</strong></li>
+                  </ul>
+                </div>
+
+                <div class="rule-panel soft-panel panel-blue">
+                  <h3>Vægttab bonus ⚖️</h3>
+                  <div class="big-icon">⚖️</div>
+                  <p class="big-rule-text">+1 felt for hver kilo du taber</p>
+
+                  <hr />
+
+                  <h3>Sådan vinder vi 👑</h3>
+                  <ul class="rule-list simple-list">
+                    <li>Kommer længst på banen</li>
+                    <li>Har den bedste fysiske udvikling</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <!-- SLIDE 2 -->
+            <article class="rule-slide">
+              <div class="slide-grid one-focus">
+                <div class="rule-panel soft-panel panel-cream wide-panel">
+                  <h3>Vores formål 💖</h3>
+                  <p class="lead-text">
+                    Vi vil støtte hinanden, have det sjovt og blive den bedste version af os selv.
+                  </p>
+
+                  <div class="sticky-stack">
+                    <div class="sticky-card pink-sticky">
+                      At forbedre fysisk form, sundhed og disciplin gennem en sjov konkurrence med fokus på konsistens og synlig fremgang.
+                    </div>
+
+                    <div class="sticky-card green-sticky">
+                      Målet er ikke perfektion — målet er at holde ved.
+                    </div>
+
+                    <div class="sticky-card blue-sticky">
+                      No zero days — selv en lille indsats tæller.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- SLIDE 3 -->
+            <article class="rule-slide">
+              <div class="slide-grid one-focus">
+                <div class="rule-panel soft-panel panel-cream wide-panel">
+                  <h3>Race system 🏁</h3>
+                  <p>
+                    Hver deltager rykker frem på banen ved at fuldføre daglige krav og optjene bonusfelter.
+                  </p>
+
+                  <div class="race-mini-preview">
+                    <div class="mini-race-row">
+                      <span class="mini-race-name lily">Lily</span>
+                      <div class="mini-race-cells">
+                        <span class="filled base"></span>
+                        <span class="filled base"></span>
+                        <span class="filled bonus"></span>
+                        <span></span><span></span><span></span><span></span>
+                      </div>
+                    </div>
+
+                    <div class="mini-race-row">
+                      <span class="mini-race-name bror">Bror</span>
+                      <div class="mini-race-cells">
+                        <span class="filled base"></span>
+                        <span class="filled base"></span>
+                        <span></span><span></span><span></span><span></span><span></span>
+                      </div>
+                    </div>
+
+                    <div class="mini-race-row">
+                      <span class="mini-race-name faetter">Fætter</span>
+                      <div class="mini-race-cells">
+                        <span class="filled base"></span>
+                        <span class="filled bonus"></span>
+                        <span></span><span></span><span></span><span></span><span></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <button class="carousel-arrow right" id="nextSlideBtn" type="button" aria-label="Næste slide">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="carousel-footer">
+          <div class="carousel-dots" id="carouselDots">
+            <button class="dot is-active" type="button" data-slide="0" aria-label="Slide 1"></button>
+            <button class="dot" type="button" data-slide="1" aria-label="Slide 2"></button>
+            <button class="dot" type="button" data-slide="2" aria-label="Slide 3"></button>
+          </div>
+
+          <div class="carousel-controls-bottom">
+            <button class="secondary-button" id="resetTourBtn" type="button">
+              <i class="bi bi-arrow-counterclockwise"></i>
+              Nulstil tour
+            </button>
+
+            <div class="slide-counter">
+              <span id="currentSlideNumber">1</span> / <span id="totalSlideNumber">3</span>
+            </div>
+
+            <button class="primary-button" id="startChallengeBtn" type="button">
+              Start challenge! 🏁
+            </button>
+          </div>
+        </div>
+
+        <div class="bottom-banner">
+          💖 Vi støtter hinanden, har det sjovt og bliver den bedste version af os selv!
+        </div>
+      </section>
+
+      <!-- DAGENS LOG -->
+      <section class="content-section" id="dailyLogSection">
+        <div class="section-header simple-header">
+          <div class="section-number">02</div>
+          <div>
+            <h2>Dagens log</h2>
+            <p>Vælg deltager, dato og kryds dagens ting af</p>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <label class="form-label">Deltager</label>
+              <select id="activeParticipant" class="form-select"></select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Dato</label>
+              <input type="date" id="entryDate" class="form-control" />
             </div>
           </div>
 
-          <div class="rules-carousel">
+          <div class="log-grid">
+            <div class="log-column">
+              <h3>Daglige krav</h3>
+              <label class="check-card"><input type="checkbox" value="training"> Trænet (20–30 min)</label>
+              <label class="check-card"><input type="checkbox" value="steps"> Gået dagens skridtmål</label>
+              <label class="check-card"><input type="checkbox" value="healthyFood"> Spist overordnet sundt</label>
+            </div>
 
-            <button class="carousel-btn" id="prevRule">‹</button>
-
-            <article class="rule-slide active">
-              <div class="rule-column">
-                <h3 class="green-pill">Daglige krav ⭐</h3>
-                <p>Fuldfør alle 3 krav for at få 1 felt frem.</p>
-                <ul>
-                  <li>✅ Trænet 20–30 min</li>
-                  <li>✅ Gået ca. 10.000 skridt</li>
-                  <li>✅ Spist overordnet sundt</li>
-                </ul>
-              </div>
-
-              <div class="rule-column">
-                <h3 class="yellow-pill">Bonus felter ⭐</h3>
-                <ul>
-                  <li>🥦 Spist grøntsager <strong>+1</strong></li>
-                  <li>🌙 Tidligt i seng / tidligt op <strong>+1</strong></li>
-                  <li>😴 8 timers søvn <strong>+1</strong></li>
-                  <li>🤸 Udstrækning / smidighed <strong>+1</strong></li>
-                  <li>🏋️ Holdtræning <strong>+1</strong></li>
-                  <li>✨ Selvpleje <strong>+1</strong></li>
-                  <li>💧 Drik 2+ liter vand <strong>+1</strong></li>
-                  <li>🏅 Ny sport / aktivitet <strong>+2</strong></li>
-                </ul>
-              </div>
-
-              <div class="rule-column">
-                <h3 class="blue-pill">Vægttab bonus ⚖️</h3>
-                <p><strong>+1 felt</strong> for hver kilo tabt.</p>
-
-                <h3 class="pink-pill">Sådan vinder vi 👑</h3>
-                <ul>
-                  <li>Kommer længst på banen</li>
-                  <li>Har den bedste fysiske udvikling</li>
-                </ul>
-              </div>
-            </article>
-
-            <article class="rule-slide">
-              <h3>No Zero Days ⚡</h3>
-              <p>
-                Hvis du ikke klarer alt, så gør noget lille.
-                Selv en lille indsats tæller.
-              </p>
-              <p class="sticky-note">Consistency beats motivation ♡</p>
-            </article>
-
-            <button class="carousel-btn" id="nextRule">›</button>
+            <div class="log-column">
+              <h3>Bonus felter</h3>
+              <label class="check-card"><input type="checkbox" value="vegetables"> Spist grøntsager</label>
+              <label class="check-card"><input type="checkbox" value="earlySleepWake"> Tidligt i seng / tidligt op</label>
+              <label class="check-card"><input type="checkbox" value="eightHoursSleep"> 8 timers søvn</label>
+              <label class="check-card"><input type="checkbox" value="stretching"> Udstrækning / smidighed</label>
+              <label class="check-card"><input type="checkbox" value="classTraining"> Holdtræning</label>
+              <label class="check-card"><input type="checkbox" value="selfCare"> Selvpleje</label>
+              <label class="check-card"><input type="checkbox" value="water"> Drik 2+ liter vand</label>
+              <label class="check-card"><input type="checkbox" value="newActivity"> Ny sport / aktivitet</label>
+              <label class="check-card"><input type="checkbox" value="personalRecord"> Personlig rekord</label>
+              <label class="check-card"><input type="checkbox" value="healthyMeal"> Lavet sundt måltid</label>
+              <label class="check-card"><input type="checkbox" value="outside"> 30 min udendørs</label>
+            </div>
           </div>
 
-          <div class="carousel-dots" id="carouselDots"></div>
-        </section>
+          <div class="mt-4">
+            <button id="saveEntryBtn" class="primary-button" type="button">Gem dag</button>
+          </div>
+        </div>
+      </section>
 
-      </main>
+      <!-- RACE TRACK -->
+      <section class="content-section" id="raceTrackSection">
+        <div class="section-header simple-header">
+          <div class="section-number">03</div>
+          <div>
+            <h2>Race track</h2>
+            <p>Her kan I se, hvem der fører lige nu</p>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="race-legend">
+            <span><span class="legend-box base"></span> Grundkrav</span>
+            <span><span class="legend-box bonus"></span> Bonus</span>
+          </div>
+
+          <div id="raceTrack" class="race-track"></div>
+        </div>
+      </section>
+
+      <!-- CHECK-IN -->
+      <section class="content-section" id="checkInSection">
+        <div class="section-header simple-header">
+          <div class="section-number">04</div>
+          <div>
+            <h2>Ugentlig check-in</h2>
+            <p>Log vægt, taljemål og bonus for vægttab</p>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label">Deltager</label>
+              <select id="weeklyParticipant" class="form-select"></select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Vægt</label>
+              <input type="number" id="weightInput" class="form-control" placeholder="kg" />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Taljemål</label>
+              <input type="number" id="waistInput" class="form-control" placeholder="cm" />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Kg tabt</label>
+              <input type="number" id="weightLostInput" class="form-control" placeholder="kg" />
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <label class="form-label">Noter</label>
+            <textarea
+              id="weeklyNotes"
+              class="form-control"
+              rows="4"
+              placeholder="Skriv lidt om energi, humør, træning eller fremgang..."
+            ></textarea>
+          </div>
+
+          <div class="mt-4">
+            <button id="saveWeeklyBtn" class="primary-button" type="button">Gem check-in</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATS -->
+      <section class="content-section" id="statsSection">
+        <div class="section-header simple-header">
+          <div class="section-number">05</div>
+          <div>
+            <h2>Statistik</h2>
+            <p>Et lille overblik over challenge-status</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="dashboard-card stat-card">
+            <h3>Førende deltager</h3>
+            <p id="leaderName">—</p>
+          </article>
+
+          <article class="dashboard-card stat-card">
+            <h3>Højeste score</h3>
+            <p id="leaderPoints">0 felter</p>
+          </article>
+
+          <article class="dashboard-card stat-card">
+            <h3>Samlet antal deltagere</h3>
+            <p id="statsParticipantCount">0</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- MOTIVATION -->
+      <section class="content-section" id="motivationSection">
+        <div class="section-header simple-header">
+          <div class="section-number">06</div>
+          <div>
+            <h2>Motivation</h2>
+            <p>Små reminders til de dage, hvor man hellere ville være en burrito</p>
+          </div>
+        </div>
+
+        <div class="motivation-grid">
+          <div class="sticky-card pink-sticky">Consistency beats motivation! ♡</div>
+          <div class="sticky-card green-sticky">No zero days — hver dag tæller.</div>
+          <div class="sticky-card blue-sticky">Små skridt er stadig skridt.</div>
+          <div class="sticky-card yellow-sticky">I støtter hinanden. Det er hele pointen.</div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="content-section" id="settingsSection">
+        <div class="section-header simple-header">
+          <div class="section-number">07</div>
+          <div>
+            <h2>Indstillinger</h2>
+            <p>Administrér challenge-data</p>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Startdato</label>
+              <input type="date" id="startDate" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Slutdato</label>
+              <input type="date" id="endDate" class="form-control" />
+            </div>
+          </div>
+
+          <div class="settings-actions">
+            <button id="resetAllDataBtn" class="secondary-button" type="button">
+              Nulstil al data
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 
+  <!-- PARTICIPANTS MODAL -->
+  <div class="modal fade" id="participantsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content custom-modal">
+        <div class="modal-header border-0">
+          <h2 class="modal-title fs-4">Rediger deltagere</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Luk"></button>
+        </div>
+
+        <div class="modal-body">
+          <form id="participantForm" class="d-flex gap-2 mb-3">
+            <input
+              type="text"
+              id="participantName"
+              class="form-control"
+              placeholder="Tilføj deltager..."
+            />
+            <button type="submit" class="primary-button small-btn">Tilføj</button>
+          </form>
+
+          <ul id="participantList" class="participant-list"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom JS -->
   <script src="js/app.js"></script>
 </body>
 </html>
